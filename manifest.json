@@ -1,0 +1,7 @@
+{
+  "name": "reveries-games",
+  "short_name": "reveries-games",
+  "description": "Games for reveries",
+  "start_url": "/",
+  "display": "standalone"
+}

@@ -1,0 +1,85 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../mediaTextView/media-text-view.html">
+<link rel="import" href="../activitySelection/activity-selection.html">
+<link rel="import" href="../pageDesign/page-design.html">
+<link rel="import" href="../poi-map/map-display.html">
+<dom-module id="reveries-games-app">
+    <template>
+        <style>
+
+        </style>
+        <iron-pages selected=0 id="pages">
+            <div>
+                <page-design heading="Choose activity">
+                    <activity-selection id="selectAct" userLat={{lat}} userLng={{lng}} remainingdist={{dist}} angle={{angle}} selected-item={{item}}></activity-selection>
+                </page-design>
+            </div>
+            <div>
+                <media-text-view id="intro" heading={{item.activityName}} text={{item.startText}} image-id={{item.startMedia}}></media-text-view>
+            </div>
+            <div>
+                <map-display userLat={{lat}} userLng={{lng}} lat="{{item.POI.latitude}}" long="{{item.POI.longitude}}" id="mapdis"></map-display>
+            </div>
+            <div>
+                <device-compass id="compass" distance={{dist}} destination-heading={{angle}}></device-compass>
+            </div>
+            <div>
+                <free-text-question image-style="height:300px;align-self:center;" class="previewquestion" question="{{activities.question}}" image-id={{activities.imageId}} wrong-answer="{{activities.wrongMessage}}" conception-mode item-id="{{activities._id}}" correct-answer="{{activities.correctMessage}}" response="{{activities.response}}" response-label="Entrez la réponse"></free-text-question>
+            </div>
+        </iron-pages>
+    </template>
+    <script>
+    Polymer({
+        is: 'reveries-games-app',
+        ready: function() {
+            this.$.selectAct.addEventListener('game-unit-selected', this.activitySelected.bind(this));
+            this.$.intro.addEventListener('media-skipped', this.introSkipped.bind(this));
+            this.$.selectAct.addEventListener('usercoord', this.setUserCoord.bind(this))
+            this.$.mapdis.addEventListener('showCompass', this.showCompass.bind(this));
+            this.$.compass.addEventListener('showMap', this.showMap.bind(this))
+            this.$.selectAct.addEventListener('poi-reached', this.startActivities.bind(this))
+        },
+        getActivities(item){
+          return item.activities[0].question;
+        },
+        startActivities: function() {
+            this.$.pages.selected = 4
+        },
+
+        showMap: function() {
+            this.$.pages.selected = 2;
+        },
+
+        showCompass: function() {
+            this.$.pages.selected = 3;
+        },
+
+        activitySelected: function() {
+            this.$.pages.selectNext();
+            this.set('activities',this.get('item').activities[0]);
+        },
+
+        introSkipped: function() {
+            this.$.pages.selectNext();
+            console.log(this.item.POI)
+                // this.$.mapdis.addEventListener('api-load',this.setPOI)
+            this.$.mapdis.showPOI(this.item.POI);
+        },
+        setPOI: function() {
+            this.$.mapdis.showPOI(this.item.POI);
+        },
+        setUserCoord: function(event) {
+            this.$.mapdis.updateUser(event.detail);
+        },
+
+        properties: {
+            currentUnitName: {
+                type: String,
+                notify: true,
+            },
+        },
+
+    });
+    </script>
+</dom-module>

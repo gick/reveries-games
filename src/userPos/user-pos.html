@@ -1,0 +1,47 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/google-apis/google-maps-api.html">
+<link rel="import" href="../../bower_components/geo-location/geo-location.html">
+<dom-module id="distance-element">
+    <template>
+        <geo-location latitude={{lat}} longitude={{lng}} id="loc" watch-pos high-accuracy></geo-location>
+        <google-maps-api api-key="AIzaSyBw9aJOCPfc4Hel0sTET3DgwJhuDeCDqdc" id="mapsApi" version="3.exp"></google-maps-api>
+    </template>
+    <script>
+    Polymer({
+
+        is: 'distance-element',
+        ready: function() {
+            var mapsApi = this.$.mapsApi;
+            mapsApi.addEventListener('api-load', this.apiLoaded.bind(this));
+        },
+
+        apiLoaded: function(e) {
+            this.$.loc.addEventListener('geo-response', this.updateCoord.bind(this));
+            this.$.loc.fetch();
+        },
+
+
+        updateCoord:function(event){
+            this.set('currentLat',event.detail.latitude);
+            this.set('currentLng',event.detail.longitude);
+
+        },
+        properties: {
+            currentLat:{
+                type:Number,
+                notify:true,
+                reflectToAttribute:true,
+            },
+            currentLng:{
+                type:Number,
+                notify:true,
+                reflectToAttribute:true,
+            }
+
+
+
+        },
+
+    });
+    </script>
+</dom-module>
