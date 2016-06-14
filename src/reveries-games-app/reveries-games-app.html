@@ -1,5 +1,7 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
 <link rel="import" href="../../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-cache.html">
+<link rel="import" href="../../bower_components/platinum-sw/platinum-sw-register.html">
 <link rel="import" href="../mediaTextView/media-text-view.html">
 <link rel="import" href="../activitySelection/activity-selection.html">
 <link rel="import" href="../pageDesign/page-design.html">
@@ -9,6 +11,9 @@
         <style>
 
         </style>
+        <platinum-sw-register auto-register>
+            <platinum-sw-cache></platinum-sw-cache>
+        </plati num-sw-register>
         <iron-pages selected=0 id="pages">
             <div>
                 <page-design heading="Choose activity">
@@ -40,8 +45,8 @@
             this.$.compass.addEventListener('showMap', this.showMap.bind(this))
             this.$.selectAct.addEventListener('poi-reached', this.startActivities.bind(this))
         },
-        getActivities(item){
-          return item.activities[0].question;
+        getActivities(item) {
+            return item.activities[0].question;
         },
         startActivities: function() {
             this.$.pages.selected = 4
@@ -57,7 +62,7 @@
 
         activitySelected: function() {
             this.$.pages.selectNext();
-            this.set('activities',this.get('item').activities[0]);
+            this.set('activities', this.get('item').activities[0]);
         },
 
         introSkipped: function() {

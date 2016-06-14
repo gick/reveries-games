@@ -1,0 +1,5 @@
+{
+	"proxy": "http://proxy.univ-lemans.fr:3128",
+  "https-proxy": "http://proxy.univ-lemans.fr:3128"
+
+}
